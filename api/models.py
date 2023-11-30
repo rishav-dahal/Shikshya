@@ -3,7 +3,7 @@ from django.db import models
 from django.forms import ModelForm
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
-class  User(models.Model):
+class User(models.Model):
     u_id= models.BigAutoField(primary_key=True)
     role_id= models.IntegerField(foreign_key=True)
     uname= models.CharField(max_length=100)
@@ -12,7 +12,7 @@ class  User(models.Model):
 
 class Role(models.Model):
     role_id=models.AutoField(primary_key=True)
-    role==models.CharField(max_length=100)
+    role =models.CharField(max_length=100)
 
 class Content(models.Model):
     content_id=models.BigAutoField(primary_key=True)
