@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework.exceptions import AuthenticationFailed
 
 
-class CustomAuthentication (BaseAuthentication):
+#class CustomAuthentication (BaseAuthentication):
 # def authentication(self,request):
 #     username=request.GET.get('username')
 #     if username is NONE:

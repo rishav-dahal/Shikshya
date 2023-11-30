@@ -2,7 +2,6 @@ from rest_framework import serializers
 from . models import *
 
 class UserSerializer(serializers.Serializer):
-    u_id = serializers.IntegerField()
     role_id = serializers.IntegerField()
     u_name = serializers.CharField(max_length=10)
     u_email =serializers.EmailField()
