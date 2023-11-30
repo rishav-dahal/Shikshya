@@ -1,0 +1,4 @@
+ pipenv
+ django
+ djangorestframework
+ djangorestframework-simplejwt
