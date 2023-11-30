@@ -1,12 +1,14 @@
 from rest_framework import serializers
+from . models import *
+
 class UserSerializer(serializers.Serializer):
-    u_id = serializers.IntegerField
+    u_id = serializers.IntegerField()
     role_id = serializers.IntegerField()
     u_name = serializers.CharField(max_length=10)
     u_email =serializers.EmailField()
-    hash = serializers.CharField(max_length=100)
-    verification = serializers.CharField(max_length=100)
-    created_at = serializers.DateTimeField()
+    
+    def create(self, validated_data):
+        return User.objects.create(**validated_data)
     
 
 class RoleSerializer(serializers.Serializer):
