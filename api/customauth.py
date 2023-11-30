@@ -4,13 +4,13 @@ from rest_framework.exceptions import AuthenticationFailed
 
 
 class CustomAuthentication (BaseAuthentication):
-def authentication(self,request):
-    username=request.GET.get('username')
-    if username is NONE:
-        return None
+# def authentication(self,request):
+#     username=request.GET.get('username')
+#     if username is NONE:
+#         return None
 
-    try:
-        email=User.objects.get(uname=username)
-    except User.DoesnotExist:
-        raise AuthenticationFailed('no such user')
-    return (user, None)
+#     try:
+#         email=User.objects.get(uname=username)
+#     except User.DoesnotExist:
+#         raise AuthenticationFailed('no such user')
+#     return (user, None)
