@@ -1,11 +1,14 @@
 from django.shortcuts import render
 from . models import *
 from .serialize import *
+from rest_framework import status
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from json.decoder import JSONDecodeError
 from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_exempt
+from api import UserLoginSerializer
+from rest_framework.views import APIView
 
 @api_view(['GET'])
 def User_detail(request):
@@ -49,6 +52,25 @@ def User_create(request):
         except JSONDecodeError as e:
             error_message = f'JSON parse error - {str(e)}'
             return Response({'error': error_message})
-            
+        
 
+@api_view(['POST'])
+def Save_audio(request):
+    
+
+class UserLoginView(APIView):
+    def post(self, request):
+        serializer = UserLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UserRegistrationView(APIView):
+    def post(self, request):
+        serializer = UserRegistrationSearilizer(data=request.data)
+        if serializer.is_valid():
+            return Response({'message': 'Registration successful'}, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

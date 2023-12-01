@@ -1,13 +1,20 @@
 from rest_framework import serializers
 from . models import *
+import re
+from django.core.validators import EmailValidator
+from django.contrib.auth import authenticate
 
 class UserSerializer(serializers.Serializer):
     role_id = serializers.IntegerField()
     u_name = serializers.CharField(max_length=10)
     u_email =serializers.EmailField()
-    
+    password =serializers.CharField(write_only=True)
     def create(self, validated_data):
+        User.set_password('secure_password')
+        User.save
         return User.objects.create(**validated_data)
+        
+
     
 
 class RoleSerializer(serializers.Serializer):
@@ -34,6 +41,56 @@ class ClassSerializer(serializers.Serializer):
     subject_name = serializers.CharField
     semester = serializers.IntegerField
 
+class UserRegistrationSearilizer(serializers.ModelSerializer):
+    u_email =serializers.EmailField(validators=[EmailValidator()])
+    password =serializers.CharField(write_only=True)
+
+    def validate_email(self, value):
+        # Custom validation for email uniqueness
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError('This email address is already in use.')
+        return value
+
+    def validate_password(self, value):
+        # Custom validation for password strength 
+        if len(value) < 8:
+            raise serializers.ValidationError('Password must be at least 8 characters long.')
+        
+         # Check for at least one uppercase letter
+        if not any(char.isupper() for char in value):
+            raise serializers.ValidationError('Password must contain at least one uppercase letter.')
+
+        # Check for at least one lowercase letter
+        if not any(char.islower() for char in value):
+            raise serializers.ValidationError('Password must contain at least one lowercase letter.')
+
+        # Check for at least one digit
+        if not any(char.isdigit() for char in value):
+            raise serializers.ValidationError('Password must contain at least one digit.')
+
+        # Check for at least one special character 
+        if not re.search(r'[!@#$%^&*(),.?":{}|<>]', value):
+            raise serializers.ValidationError('Password must contain at least one special character.')
+
+        return value
+    
+class UserLoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
+
+    def validate(self, data):
+        email = data.get('email')
+        password = data.get('password')
+
+        # Authenticate user
+        user = authenticate(username=email, password=password)
+
+        if user and user.is_active:
+            data['user'] = user
+        else:
+            raise serializers.ValidationError('Invalid credentials')
+
+        return data
         
 
     

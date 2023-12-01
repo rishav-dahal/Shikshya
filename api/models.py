@@ -15,7 +15,7 @@ class User(models.Model):
 
 class File(models.Model):
     file_id=models.BigAutoField(primary_key=True)
-    path=models.CharField(max_length=250)
+    file = models.FileField(upload_to='audio/')
 
 class Content(models.Model):
     content_id=models.BigAutoField(primary_key=True)
