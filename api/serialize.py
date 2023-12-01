@@ -9,14 +9,7 @@ class UserSerializer(serializers.Serializer):
     u_name = serializers.CharField(max_length=10)
     u_email =serializers.EmailField()
     password =serializers.CharField(write_only=True)
-    def create(self, validated_data):
-        User.set_password('secure_password')
-        User.save
-        return User.objects.create(**validated_data)
         
-
-    
-
 class RoleSerializer(serializers.Serializer):
     role_id = serializers.IntegerField()
     role_name = serializers.CharField()
@@ -41,9 +34,11 @@ class ClassSerializer(serializers.Serializer):
     subject_name = serializers.CharField
     semester = serializers.IntegerField
 
-class UserRegistrationSearilizer(serializers.ModelSerializer):
+class UserRegistrationSerilizer(serializers.Serializer):
     u_email =serializers.EmailField(validators=[EmailValidator()])
     password =serializers.CharField(write_only=True)
+    role_id = serializers.IntegerField()
+    u_name = serializers.CharField(max_length=10)
 
     def validate_email(self, value):
         # Custom validation for email uniqueness
@@ -73,24 +68,28 @@ class UserRegistrationSearilizer(serializers.ModelSerializer):
             raise serializers.ValidationError('Password must contain at least one special character.')
 
         return value
+    def create(self, validated_data):
+        # User.set_password('secure_password')
+        User.save
+        return User.objects.create(**validated_data)
     
-class UserLoginSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    password = serializers.CharField()
+# class UserLoginSerializer(serializers.Serializer):
+#     u_email = serializers.EmailField()
+#     password = serializers.CharField()
+#     print("hello world"),
+#     def validate(self,data):
+#         u_email = data.get('u_email')
+#         password = data.get('password')
 
-    def validate(self, data):
-        email = data.get('email')
-        password = data.get('password')
+#         # Authenticate user
+#         user = authenticate(u_email=u_email, password=password)
 
-        # Authenticate user
-        user = authenticate(username=email, password=password)
+#         if user and user.is_active:
+#             data['u_email'] = user
+#             return data
+#         else:
+#             raise serializers.ValidationError('Invalid credentials')
 
-        if user and user.is_active:
-            data['user'] = user
-        else:
-            raise serializers.ValidationError('Invalid credentials')
-
-        return data
         
 
     

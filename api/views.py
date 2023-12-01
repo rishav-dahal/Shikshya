@@ -7,7 +7,6 @@ from rest_framework.response import Response
 from json.decoder import JSONDecodeError
 from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_exempt
-from api import UserLoginSerializer
 from rest_framework.views import APIView
 
 @api_view(['GET'])
@@ -41,10 +40,8 @@ def Class_detail(request):
 def User_create(request):
     if request.method == 'POST' :
         try:
-            print("Request Body:", request.body)
             python_data = JSONParser().parse(request)
-            print("Parsed Data:", python_data)
-            serializer = UserSerializer(data=python_data)
+            serializer = UserRegistrationSerilizer(data=python_data)
             if serializer.is_valid():
                 serializer.save()
                 return Response ( {'Success':'True'})
@@ -54,23 +51,23 @@ def User_create(request):
             return Response({'error': error_message})
         
 
-@api_view(['POST'])
-def Save_audio(request):
+# @api_view(['POST'])
+#
+
+# def User_Login(request):
     
+#     serializer = UserLoginSerializer(data=request.data)
+#     if serializer.is_valid():
+#         validated_data = serializer.validated_data
+#         return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
+#     else:
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class UserLoginView(APIView):
-    def post(self, request):
-        serializer = UserLoginSerializer(data=request.data)
-        if serializer.is_valid():
-            return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class UserRegistrationView(APIView):
-    def post(self, request):
-        serializer = UserRegistrationSearilizer(data=request.data)
-        if serializer.is_valid():
-            return Response({'message': 'Registration successful'}, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# def User_Registration(self, request):
+#     serializer = UserRegistrationSearilizer(data=request.data)
+#     if serializer.is_valid():
+#         return Response({'message': 'Registration successful'}, status=status.HTTP_200_OK)
+#     else:
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

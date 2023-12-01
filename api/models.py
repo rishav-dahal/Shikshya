@@ -12,6 +12,7 @@ class User(models.Model):
     role= models.ForeignKey(Role , on_delete=models.CASCADE)
     u_name= models.CharField(max_length=100)
     u_email = models.EmailField(max_length=100, unique=True)
+    password = models.CharField(max_length=225)
 
 class File(models.Model):
     file_id=models.BigAutoField(primary_key=True)
