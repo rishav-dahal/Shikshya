@@ -12,6 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from api import UserLoginSerializer
 from rest_framework.views import APIView
 from .models import File
+from openai import OpenAI
 
 @api_view(['GET'])
 def User_detail(request):
@@ -59,14 +60,42 @@ def User_create(request):
 
 @api_view(['POST'])
 def Save_audio(self,request):
+    client = OpenAI(api_key="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")
     audio_file = request.FILES.get('audioFile')
     if audio_file:
         # Save the audio file
         fs = FileSystemStorage(location='media/audio')  # Adjust the location to your desired path
         filename = fs.save(audio_file.name, audio_file)
+        store_file(self,request,filename)
+        transcript = client.audio.translations.create(
+            model="whisper-1", 
+            file=audio_file
+        )
+
+        summarize = transcript.text
+
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo-1106",
+            messages=[
+                {"role": "system", "content": "Please give the summary of this online class in json format, and 'title', 'summary', 'topics_dicussed','point_to_remember' in json format make sure to give topics_discussed and point_to_remember in text only in 50 words"},
+                {"role": "user", "content": summarize}
+            ]
+        )
+
+        # Get the content from the response
+        content = response.choices[0].message.content
+
+        # Remove the markdown code block identifiers
+        content = content.replace("```json\n", "").replace("\n```", "")
+
+        # Convert the string to a JSON object
+        json_response = json.loads(content)
         return JsonResponse({'message': 'Audio file uploaded successfully', 'filename': filename})
+    
     else:
         return JsonResponse({'error': 'No audio file received'}, status=400)
+
+
 
 
 class UserLoginView(APIView):
@@ -85,3 +114,9 @@ class UserRegistrationView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+def store_file (self,request, filename):
+    serializer=FileSerializer(data=request.data)
+    if serializer.is_valid():
+        return Response({'message': 'audio file saved in database'}, status=status.HTTP_200_OK)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
