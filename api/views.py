@@ -3,12 +3,15 @@ from . models import *
 from .serialize import *
 from rest_framework import status
 from rest_framework.parsers import JSONParser
+from django.http import JsonResponse
+from django.core.files.storage import FileSystemStorage
 from rest_framework.response import Response
 from json.decoder import JSONDecodeError
 from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_exempt
 from api import UserLoginSerializer
 from rest_framework.views import APIView
+from .models import File
 
 @api_view(['GET'])
 def User_detail(request):
@@ -55,8 +58,16 @@ def User_create(request):
         
 
 @api_view(['POST'])
-def Save_audio(request):
-    
+def Save_audio(self,request):
+    audio_file = request.FILES.get('audioFile')
+    if audio_file:
+        # Save the audio file
+        fs = FileSystemStorage(location='media/audio')  # Adjust the location to your desired path
+        filename = fs.save(audio_file.name, audio_file)
+        return JsonResponse({'message': 'Audio file uploaded successfully', 'filename': filename})
+    else:
+        return JsonResponse({'error': 'No audio file received'}, status=400)
+
 
 class UserLoginView(APIView):
     def post(self, request):
