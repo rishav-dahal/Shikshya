@@ -8,3 +8,7 @@ class UserAdmin(admin.ModelAdmin):
 @admin.register(Role)
 class RoleAdmin(admin.ModelAdmin):
     list_display=['role_id', 'role']
+    
+@admin.register(Role)
+class RoleAdmin(admin.ModelAdmin):
+    list_display=['role_id', 'role']
