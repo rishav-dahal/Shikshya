@@ -6,6 +6,7 @@ urlpatterns = [
     path('contentinfo/',views.Content_detail), 
     path('Fileinfo/',views.File_detail), 
     path('classinfo/',views.Class_detail),
-    path('usrcreate/',views.User_create)
-    #path('login/',views.User_Login)
+    path('usrcreate/',views.User_create),
+    path('',views.home),
+    path('saveaudio/',views.Save_audio),
    ]

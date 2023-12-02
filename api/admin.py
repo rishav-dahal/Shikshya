@@ -9,6 +9,14 @@ class UserAdmin(admin.ModelAdmin):
 class RoleAdmin(admin.ModelAdmin):
     list_display=['role_id', 'role']
     
-@admin.register(Role)
-class RoleAdmin(admin.ModelAdmin):
-    list_display=['role_id', 'role']
+@admin.register(File)
+class FileAdmin(admin.ModelAdmin):
+    list_display=['file_id', 'file']
+    
+@admin.register(Content)
+class ContentAdmin(admin.ModelAdmin):
+    list_display=['content_id', 'content_json','file','created_at']
+    
+@admin.register(Class)
+class ClassAdmin(admin.ModelAdmin):
+    list_display=['class_id', 'subject_name','semister']

@@ -20,7 +20,7 @@ class File(models.Model):
 
 class Content(models.Model):
     content_id=models.BigAutoField(primary_key=True)
-    content_jason=models.JSONField()
+    content_json=models.JSONField()
     file=models.ForeignKey(File , on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
